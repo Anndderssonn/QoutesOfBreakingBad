@@ -4,7 +4,6 @@
 //
 //  Created by Andersson on 17/02/25.
 //
-// https://breaking-bad-api-six.vercel.app/api
 
 import SwiftUI
 
