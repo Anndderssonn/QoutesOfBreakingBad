@@ -9,7 +9,7 @@ import Foundation
 
 struct DeathModel: Decodable {
     let character: String
-    let image: String
+    let image: URL
     let details: String
     let lastWords: String
 }
