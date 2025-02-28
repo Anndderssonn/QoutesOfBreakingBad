@@ -10,13 +10,15 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            Tab("Breaking Bad", systemImage: "flask") {
-                QuoteView(show: "Breaking Bad")
-                    .toolbarBackgroundVisibility(.visible, for: .tabBar)
+            Tab(Constants.breakingBadName, systemImage: "flask") {
+                QuoteView(show: Constants.breakingBadName)
+                    
             }
-            Tab("Better Call Saul", systemImage: "candybarphone") {
-                QuoteView(show: "Better Call Saul")
-                    .toolbarBackgroundVisibility(.visible, for: .tabBar)
+            Tab(Constants.betterCallSaulName, systemImage: "candybarphone") {
+                QuoteView(show: Constants.betterCallSaulName)
+            }
+            Tab(Constants.elCaminoName, systemImage: "road.lanes.curved.right") {
+                QuoteView(show: Constants.elCaminoName)
             }
         }
         .preferredColorScheme(.dark)
