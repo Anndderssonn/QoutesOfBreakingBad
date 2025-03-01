@@ -26,7 +26,7 @@ struct QuoteView: View {
                             EmptyView()
                         case .fetching:
                             ProgressView()
-                        case .success:
+                        case .successQuotes:
                             Text("\"\(quotesVM.quote.quote)\"")
                                 .minimumScaleFactor(0.5)
                                 .multilineTextAlignment(.center)
@@ -56,24 +56,43 @@ struct QuoteView: View {
                             .onTapGesture {
                                 showCharacterInfo.toggle()
                             }
+                        case .successEpisodes:
+                            EpisodeView(episode: quotesVM.episode)
                         case .failed(let error):
                             Text(error.localizedDescription)
                         }
-                        Spacer()
+                        Spacer(minLength: 20)
                     }
-                    Button {
-                        Task {
-                            await quotesVM.fetchData(for: show)
+                    HStack {
+                        Button {
+                            Task {
+                                await quotesVM.getQuoteData(for: show)
+                            }
+                        } label: {
+                            Text("Get Random Quote")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .background(Color("\(show.removeSpaces())Button"))
+                            .clipShape(.rect(cornerRadius: 5))
+                            .shadow(color: Color("\(show.removeSpaces())Shadow"), radius: 3)
                         }
-                    } label: {
-                        Text("Get Random Quote")
-                        .font(.title2)
-                        .foregroundStyle(.white)
-                        .padding()
-                        .background(Color("\(show.removeSpaces())Button"))
-                        .clipShape(.rect(cornerRadius: 5))
-                        .shadow(color: Color("\(show.removeSpaces())Shadow"), radius: 3)
+                        Spacer()
+                        Button {
+                            Task {
+                                await quotesVM.getEpisode(for: show)
+                            }
+                        } label: {
+                            Text("Get Random Episode")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .background(Color("\(show.removeSpaces())Button"))
+                            .clipShape(.rect(cornerRadius: 5))
+                            .shadow(color: Color("\(show.removeSpaces())Shadow"), radius: 3)
+                        }
                     }
+                    .padding(.horizontal, 30)
                     Spacer(minLength: 110)
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
