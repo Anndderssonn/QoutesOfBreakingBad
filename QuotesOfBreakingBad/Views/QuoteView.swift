@@ -104,6 +104,11 @@ struct QuoteView: View {
         .sheet(isPresented: $showCharacterInfo) {
             CharacterView(character: quotesVM.character, show: show)
         }
+        .onAppear {
+            Task {
+                await quotesVM.getQuoteData(for: show)
+            }
+        }
     }
 }
 
