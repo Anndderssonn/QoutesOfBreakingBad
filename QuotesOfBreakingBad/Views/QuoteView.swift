@@ -36,7 +36,7 @@ struct QuoteView: View {
                                 .clipShape(.rect(cornerRadius: 10))
                                 .padding(.horizontal)
                             ZStack(alignment: .bottom) {
-                                AsyncImage(url: quotesVM.character.images[0]) { image in
+                                AsyncImage(url: quotesVM.character.images.randomElement()) { image in
                                     image
                                         .resizable()
                                         .scaledToFill()
