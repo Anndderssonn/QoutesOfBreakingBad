@@ -58,6 +58,8 @@ struct QuoteView: View {
                             }
                         case .successEpisodes:
                             EpisodeView(episode: quotesVM.episode)
+                        case .successRandomCharacter:
+                            RandomCharacterView(character: quotesVM.character)
                         case .failed(let error):
                             Text(error.localizedDescription)
                         }
@@ -70,7 +72,7 @@ struct QuoteView: View {
                             }
                         } label: {
                             Text("Get Random Quote")
-                            .font(.title3)
+                            .font(.subheadline)
                             .foregroundStyle(.white)
                             .padding()
                             .background(Color("\(show.removeSpaces())Button"))
@@ -84,7 +86,21 @@ struct QuoteView: View {
                             }
                         } label: {
                             Text("Get Random Episode")
-                            .font(.title3)
+                            .font(.subheadline)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .background(Color("\(show.removeSpaces())Button"))
+                            .clipShape(.rect(cornerRadius: 5))
+                            .shadow(color: Color("\(show.removeSpaces())Shadow"), radius: 3)
+                        }
+                        Spacer()
+                        Button {
+                            Task {
+                                await quotesVM.getCharacterRandom(for: show)
+                            }
+                        } label: {
+                            Text("Get Random Character")
+                            .font(.subheadline)
                             .foregroundStyle(.white)
                             .padding()
                             .background(Color("\(show.removeSpaces())Button"))

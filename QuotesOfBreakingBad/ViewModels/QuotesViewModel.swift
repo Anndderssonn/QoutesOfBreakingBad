@@ -15,6 +15,7 @@ class QuotesViewModel {
         case fetching
         case successQuotes
         case successEpisodes
+        case successRandomCharacter
         case failed(error: Error)
     }
     
@@ -58,4 +59,31 @@ class QuotesViewModel {
             status = .failed(error: error)
         }
     }
+    
+    func getCharacterRandom(for show: String) async {
+        status = .fetching
+        var attempts = 0
+        let maxAttempts = 10
+        do {
+            while attempts < maxAttempts {
+                if let unwrappedCharacter = try await fetcher.fetchRandomCharacter() {
+                    if unwrappedCharacter.productions.contains(show) {
+                        character = unwrappedCharacter
+                        status = .successRandomCharacter
+                        return
+                    } else {
+                        attempts += 1
+                    }
+                }
+            }
+            let error = NSError(domain: "RandomCharacterError",
+                                code: -1,
+                                userInfo: [NSLocalizedDescriptionKey: "No valid character found after \(maxAttempts) attempts."]
+            )
+            status = .failed(error: error)
+        } catch {
+            status = .failed(error: error)
+        }
+    }
+    
 }
