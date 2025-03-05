@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CharacterView: View {
+    let quotesVM = QuotesViewModel()
     let character: CharacterModel
     let show: String
     
@@ -59,6 +60,26 @@ struct CharacterView: View {
                             } else {
                                 Text("None")
                                     .font(.subheadline)
+                            }
+                            Divider()
+                            Text("Random Quote:")
+                            switch quotesVM.status {
+                            case .notStarted, .successEpisodes, .successRandomCharacter:
+                                EmptyView()
+                            case .fetching:
+                                ProgressView()
+                            case .successQuotes:
+                                Text("\"\(quotesVM.quote.quote)\"")
+                                    .padding(.vertical)
+                            case .failed(let error):
+                                Text(error.localizedDescription)
+                            }
+                            Button {
+                                Task {
+                                    await quotesVM.getCharacterQoute(for: character.name)
+                                }
+                            } label: {
+                                Text("Get Random Quote")                                
                             }
                             Divider()
                             DisclosureGroup("Status (spoiler alert!):") {

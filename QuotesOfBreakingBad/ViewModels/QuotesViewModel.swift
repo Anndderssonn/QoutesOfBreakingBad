@@ -86,4 +86,13 @@ class QuotesViewModel {
         }
     }
     
+    func getCharacterQoute(for character: String) async {
+        status = .fetching
+        do {
+            quote = try await fetcher.fetchCharacterQuote(for: character)
+            status = .successQuotes
+        } catch {
+            status = .failed(error: error)
+        }
+    }
 }
