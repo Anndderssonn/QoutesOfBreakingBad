@@ -64,7 +64,7 @@ struct CharacterView: View {
                             Divider()
                             Text("Random Quote:")
                             switch quotesVM.status {
-                            case .notStarted, .successEpisodes, .successRandomCharacter:
+                            case .notStarted, .successEpisodes, .successRandomCharacter, .successSimpsonQuote:
                                 EmptyView()
                             case .fetching:
                                 ProgressView()

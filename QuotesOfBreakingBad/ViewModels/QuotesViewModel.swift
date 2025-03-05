@@ -16,6 +16,7 @@ class QuotesViewModel {
         case successQuotes
         case successEpisodes
         case successRandomCharacter
+        case successSimpsonQuote
         case failed(error: Error)
     }
     
@@ -24,6 +25,7 @@ class QuotesViewModel {
     var quote: QuoteModel
     var character: CharacterModel
     var episode: EpisodeModel
+    var simpsonQuote: SimpsonQuoteModel
     
     init() {
         let decoder = JSONDecoder()
@@ -34,9 +36,15 @@ class QuotesViewModel {
         character = try! decoder.decode(CharacterModel.self, from: characterData)
         let episodeData = try! Data(contentsOf: Bundle.main.url(forResource: "sampleepisode", withExtension: "json")!)
         episode = try! decoder.decode(EpisodeModel.self, from: episodeData)
+        let simpsonQuoteData = try! Data(contentsOf: Bundle.main.url(forResource: "simpsonquote", withExtension: "json")!)
+        simpsonQuote = try! decoder.decode(SimpsonQuoteModel.self, from: simpsonQuoteData)
     }
     
     func getQuoteData(for show: String) async {
+        if Int.random(in: 0...100) > 80 {
+            await getSimpsonQuote()
+            return
+        }
         status = .fetching
         do {
             quote = try await fetcher.fetchQuotes(from: show)
@@ -91,6 +99,18 @@ class QuotesViewModel {
         do {
             quote = try await fetcher.fetchCharacterQuote(for: character)
             status = .successQuotes
+        } catch {
+            status = .failed(error: error)
+        }
+    }
+    
+    private func getSimpsonQuote() async {
+        status = .fetching
+        do {
+            if let unwrappedQuote = try await fetcher.fetchSimpsonQuote() {
+                simpsonQuote = unwrappedQuote
+            }
+            status = .successSimpsonQuote
         } catch {
             status = .failed(error: error)
         }

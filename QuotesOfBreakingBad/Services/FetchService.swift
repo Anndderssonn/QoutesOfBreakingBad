@@ -13,6 +13,7 @@ struct FetchService {
     }
     
     private let baseURL = URL(string: "https://breaking-bad-api-six.vercel.app/api")!
+    private let simpsonBaseURL = URL(string: "https://thesimpsonsquoteapi.glitch.me")!
     
     func fetchQuotes(from show: String) async throws -> QuoteModel {
         let quoteURL = baseURL.appending(path: "quotes/random")
@@ -76,14 +77,23 @@ struct FetchService {
     }
     
     func fetchCharacterQuote(for character: String) async throws -> QuoteModel {
-        let characterFormatted = character.replacingOccurrences(of: " ", with: "+")
         let quoteURL = baseURL.appending(path: "quotes/random")
-        let fetchURL = quoteURL.appending(queryItems: [URLQueryItem(name: "character", value: characterFormatted)])
+        let fetchURL = quoteURL.appending(queryItems: [URLQueryItem(name: "character", value: character)])
         let (data, response) = try await URLSession.shared.data(from: fetchURL)
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
             throw FetchError.badresponse
         }
         let quote = try JSONDecoder().decode(QuoteModel.self, from: data)
         return quote
+    }
+    
+    func fetchSimpsonQuote() async throws -> SimpsonQuoteModel? {
+        let quoteURL = simpsonBaseURL.appending(path: "quotes")
+        let (data, response) = try await URLSession.shared.data(from: quoteURL)
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw FetchError.badresponse
+        }
+        let quote = try JSONDecoder().decode([SimpsonQuoteModel].self, from: data)
+        return quote.first
     }
 }

@@ -60,6 +60,35 @@ struct QuoteView: View {
                             EpisodeView(episode: quotesVM.episode)
                         case .successRandomCharacter:
                             RandomCharacterView(character: quotesVM.character)
+                        case .successSimpsonQuote:
+                            Text("\"\(quotesVM.simpsonQuote.quote)\"")
+                                .minimumScaleFactor(0.5)
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(.white)
+                                .padding()
+                                .background(.black.opacity(0.5))
+                                .clipShape(.rect(cornerRadius: 10))
+                                .padding(.horizontal)
+                            ZStack(alignment: .bottom) {
+                                AsyncImage(url: quotesVM.simpsonQuote.image) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                .frame(width: geometry.size.width/1.1, height: geometry.size.height/1.8)
+                                Color.black
+                                    .opacity(0.2)
+                                Text(quotesVM.simpsonQuote.character)
+                                    .font(.headline)
+                                    .foregroundStyle(.white)
+                                    .padding(10)
+                                    .frame(maxWidth: .infinity)
+                                    .background(.ultraThinMaterial)
+                            }
+                            .frame(width: geometry.size.width/1.1, height: geometry.size.height/1.8)
+                            .clipShape(.rect(cornerRadius: 10))
                         case .failed(let error):
                             Text(error.localizedDescription)
                         }
